@@ -3,12 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Guess It - Custom List</title>
+    <script>
+        function toggleInputMethod() {
+            const fileInput = document.getElementById('fileInput');
+            const textAreaInput = document.getElementById('textAreaInput');
+            const inputMethod = document.querySelector('input[name="inputMethod"]:checked').value;
+            if (inputMethod === 'file') {
+                fileInput.style.display = 'block';
+                textAreaInput.style.display = 'none';
+            } else {
+                fileInput.style.display = 'none';
+                textAreaInput.style.display = 'block';
+            }
+        }
+    </script>
 </head>
 <body>
     <h1>Submit Custom Word List</h1>
     <form action="game.html" method="post" enctype="multipart/form-data">
-        <label for="wordlist">Upload Word List (CSV or TXT):</label>
-        <input type="file" id="wordlist" name="wordlist" accept=".csv, .txt"><br>
+        <label>
+            <input type="radio" name="inputMethod" value="file" checked onclick="toggleInputMethod()"> Upload File
+        </label>
+        <label>
+            <input type="radio" name="inputMethod" value="textarea" onclick="toggleInputMethod()"> Enter Words Manually
+        </label>
+        <div id="fileInput">
+            <label for="wordlist">Upload Word List (CSV or TXT):</label>
+            <input type="file" id="wordlist" name="wordlist" accept=".csv, .txt"><br>
+        </div>
+        <div id="textAreaInput" style="display: none;">
+            <label for="wordlistText">Enter Words (one per line):</label><br>
+            <textarea id="wordlistText" name="wordlistText" rows="10" cols="30"></textarea><br>
+        </div>
         <button type="submit">Submit</button>
     </form>
     <a href="game.html">Skip</a>
