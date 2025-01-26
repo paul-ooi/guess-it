@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess It - Game</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            background-color: #000;
+            color: #fff;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--team-color, #000);
+        }
+        main h1 {
+            font-size: 48px;
+            font-weight: bold;
+            color: #fff;
+        }
+        footer {
+            height: 10%;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Word or Phrase</h1>
+    </main>
+    <footer>
+        <span>Team Name: <span id="teamName">Team 1</span></span> | 
+        <span>Score: <span id="score">0</span></span>
+    </footer>
+</body>
+</html>

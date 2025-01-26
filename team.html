@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess It - Team Setup</title>
+    <script>
+        function addTeam() {
+            const teamContainer = document.getElementById('teamContainer');
+            const teamCount = teamContainer.children.length + 1;
+            const newTeam = document.createElement('div');
+            newTeam.innerHTML = `
+                <label for="team${teamCount}">Team ${teamCount} Name:</label>
+                <input type="text" id="team${teamCount}" name="team${teamCount}" required><br>
+                <label for="team${teamCount}Color">Team ${teamCount} Color:</label>
+                <input type="color" id="team${teamCount}Color" name="team${teamCount}Color" value="#${Math.floor(Math.random()*16777215).toString(16)}"><br>
+            `;
+            teamContainer.appendChild(newTeam);
+        }
+    </script>
+</head>
+<body>
+    <h1>Enter Team Names and Colors</h1>
+    <form action="custom-list.html" method="post">
+        <div id="teamContainer">
+            <div>
+                <label for="team1">Team 1 Name:</label>
+                <input type="text" id="team1" name="team1" required><br>
+                <label for="team1Color">Team 1 Color:</label>
+                <input type="color" id="team1Color" name="team1Color" value="#DC143C"><br>
+            </div>
+            <div>
+                <label for="team2">Team 2 Name:</label>
+                <input type="text" id="team2" name="team2" required><br>
+                <label for="team2Color">Team 2 Color:</label>
+                <input type="color" id="team2Color" name="team2Color" value="#000080"><br>
+            </div>
+        </div>
+        <button type="button" onclick="addTeam()">Add Team</button><br><br>
+        <button type="submit">Next</button>
+    </form>
+</body>
+</html>
