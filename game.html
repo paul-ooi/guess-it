@@ -33,15 +33,101 @@
             justify-content: space-around;
             align-items: center;
         }
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
     </style>
 </head>
 <body>
     <main>
-        <h1>Word or Phrase</h1>
+        <h1 id="word">Word or Phrase</h1>
     </main>
     <footer>
         <span>Team Name: <span id="teamName">Team 1</span></span> | 
         <span>Score: <span id="score">0</span></span>
     </footer>
+    <div class="controls">
+        <button onclick="simulateGesture('up')">Tilt Up</button>
+        <button onclick="simulateGesture('down')">Tilt Down</button>
+    </div>
+    <script src="js/sql-wasm.js"></script>
+    <script src="js/database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const db = await initDatabase();
+            const teamNameElement = document.getElementById('teamName');
+            const scoreElement = document.getElementById('score');
+            const wordElement = document.getElementById('word');
+            let currentTeamIndex = 0;
+            let teams = [];
+            let words = [];
+
+            function updateTeamInfo() {
+                const team = teams[currentTeamIndex];
+                teamNameElement.textContent = team.name;
+                scoreElement.textContent = team.score;
+                document.body.style.setProperty('--team-color', team.color);
+            }
+
+            function getRandomWord() {
+                if (words.length === 0) {
+                    window.location.href = 'results.html';
+                    return;
+                }
+                const randomIndex = Math.floor(Math.random() * words.length);
+                const word = words.splice(randomIndex, 1)[0];
+                wordElement.textContent = word;
+            }
+
+            function handleGesture(gesture) {
+                if (gesture === 'up') {
+                    teams[currentTeamIndex].score += 1;
+                    db.run('UPDATE teams SET score = ? WHERE id = ?', [teams[currentTeamIndex].score, teams[currentTeamIndex].id]);
+                    saveDatabase(db);
+                }
+                currentTeamIndex = (currentTeamIndex + 1) % teams.length;
+                updateTeamInfo();
+                getRandomWord();
+            }
+
+            // Load teams and words from the database
+            const teamResults = db.exec('SELECT * FROM teams');
+            const wordResults = db.exec('SELECT word FROM words');
+
+            if (teamResults.length > 0) {
+                teams = teamResults[0].values.map(row => ({
+                    id: row[0],
+                    name: row[1],
+                    color: row[2],
+                    score: row[3]
+                }));
+            }
+
+            if (wordResults.length > 0) {
+                words = wordResults[0].values.map(row => row[0]);
+            }
+
+            updateTeamInfo();
+            getRandomWord();
+
+            // Add event listeners for gesture input
+            window.addEventListener('deviceorientation', event => {
+                const { beta } = event;
+                if (beta > 45) {
+                    handleGesture('up');
+                } else if (beta < -45) {
+                    handleGesture('down');
+                }
+            });
+
+            // Simulate gesture input for testing
+            window.simulateGesture = handleGesture;
+        });
+    </script>
 </body>
 </html>

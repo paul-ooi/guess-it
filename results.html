@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Guess It - Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f1f1f1;
+        }
+        h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        table {
+            border-collapse: collapse;
+            width: 50%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Results</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Team Name</th>
+                <th>Score</th>
+            </tr>
+        </thead>
+        <tbody id="resultsTableBody">
+            <!-- Results will be populated here -->
+        </tbody>
+    </table>
+    <button id="playAgainButton">Play Again</button>
+    <script src="js/sql-wasm.js"></script>
+    <script src="js/database.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const db = await initDatabase();
+            const resultsTableBody = document.getElementById('resultsTableBody');
+
+            // Load teams and scores from the database
+            const teamResults = db.exec('SELECT name, score FROM teams ORDER BY score DESC');
+            if (teamResults.length > 0) {
+                const teams = teamResults[0].values;
+                teams.forEach(team => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${team[0]}</td><td>${team[1]}</td>`;
+                    resultsTableBody.appendChild(row);
+                });
+            }
+
+
+            // Reset team scores and redirect to custom-list.html
+            playAgainButton.addEventListener('click', () => {
+                db.run('UPDATE teams SET score = 0');
+                saveDatabase(db);
+                window.location.href = 'custom-list.html';
+            });
+        });
+    </script>
+</body>
+</html>

@@ -20,7 +20,7 @@
 </head>
 <body>
     <h1>Enter Team Names and Colors</h1>
-    <form action="custom-list.html" method="post">
+    <form id="teamForm" action="custom-list.html" method="post">
         <div id="teamContainer">
             <div>
                 <label for="team1">Team 1 Name:</label>
@@ -38,5 +38,7 @@
         <button type="button" onclick="addTeam()">Add Team</button><br><br>
         <button type="submit">Next</button>
     </form>
+    <script src="js/sql-wasm.js"></script>
+    <script src="js/database.js"></script>
 </body>
 </html>

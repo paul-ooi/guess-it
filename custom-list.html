@@ -16,11 +16,20 @@
                 textAreaInput.style.display = 'block';
             }
         }
+
+        async function clearWordList() {
+            const db = await initDatabase();
+            db.run('DELETE FROM words');
+            const wordResults = db.exec('SELECT * FROM words');
+            console.log('Word list after clearing:', wordResults);
+            saveDatabase(db);
+            alert('Word list cleared!');
+        }
     </script>
 </head>
 <body>
     <h1>Submit Custom Word List</h1>
-    <form action="game.html" method="post" enctype="multipart/form-data">
+    <form id="wordListForm" action="game.html" method="post" enctype="multipart/form-data">
         <label>
             <input type="radio" name="inputMethod" value="file" checked onclick="toggleInputMethod()"> Upload File
         </label>
@@ -37,6 +46,9 @@
         </div>
         <button type="submit">Submit</button>
     </form>
+    <button onclick="clearWordList()">Clear List</button>
     <a href="game.html">Skip</a>
+    <script src="js/sql-wasm.js"></script>
+    <script src="js/database.js"></script>
 </body>
 </html>
